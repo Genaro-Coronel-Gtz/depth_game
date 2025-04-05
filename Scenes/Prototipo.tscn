@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dqe37fah5kkke"]
+[gd_scene load_steps=6 format=3 uid="uid://dqe37fah5kkke"]
 
+[ext_resource type="Script" uid="uid://bj8cdvfs4xtkh" path="res://Scenes/LoadBlur.gd" id="1_uacpp"]
 [ext_resource type="PackedScene" uid="uid://dbt1a88wxs1x5" path="res://Scenes/player.tscn" id="10_sp2pw"]
 
 [sub_resource type="Environment" id="Environment_ky065"]
@@ -11,6 +12,26 @@ size = Vector2(20, 20)
 size = Vector3(20, 0.5, 20)
 
 [node name="Prototipo" type="Node3D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+script = ExtResource("1_uacpp")
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ky065")
@@ -36,3 +57,6 @@ shape = SubResource("BoxShape3D_myvrv")
 [node name="TestBox" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 2.5, -5)
 size = Vector3(3, 5, 3)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0.998108, 0.0614841, 0, -0.0614841, 0.998108, 0, 0, 0, 1, -4.94849, 0, 0.775311)

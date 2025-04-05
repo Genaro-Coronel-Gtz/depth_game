@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://dbt1a88wxs1x5"]
+
+[ext_resource type="Script" uid="uid://xtokxmde8k1l" path="res://Script/player.gd" id="1_ajj78"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l7m1b"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cvnsp"]
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_v0iea"]
+exposure_multiplier = 2.011
+frustum_focus_distance = 2536.31
+frustum_focal_length = 8.52
+frustum_near = 0.001
+frustum_far = 397.69
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_ajj78")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+visible = false
+offset_right = 262.0
+offset_bottom = 214.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_l7m1b")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_cvnsp")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_right = 800.0
+offset_bottom = 800.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(800, 800)
+render_target_update_mode = 4
+
+[node name="CaptureCamera" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93403, 1.56792)
+attributes = SubResource("CameraAttributesPhysical_v0iea")

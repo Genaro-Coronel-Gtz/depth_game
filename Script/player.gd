@@ -11,6 +11,7 @@ var mouse_sensitivity = 0.00050
 var capture_camera_active = false
 var NEAR_DISTANCE : float = 0
 var FAR_DISTANCE : float = 0
+const COLLISION_MASK_OBSTACLES = 1
 
 func _config_limits() -> void:
 	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
@@ -22,6 +23,24 @@ func _ready() -> void:
 		GlobalPosition.connect("set_nearest_target", Callable(self, "_set_current_target"))
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
+func is_visible_to_player(current_target: CSGPrimitive3D):
+	var space_state = get_world_3d().direct_space_state
+	
+	var ray_origin = global_transform.origin
+	var ray_target = current_target.global_transform.origin
+	
+	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_target)
+	query.collision_mask = COLLISION_MASK_OBSTACLES
+	query.exclude = [self.get_rid()]
+	
+	var result = space_state.intersect_ray(query)
+	
+	if result:
+		return result["collider"] == target
+	else:
+		return true
+	
+
 func _check_distance():
 	GlobalPosition.update_player_position(position)
 	if target and capture_camera_active:
@@ -29,12 +48,16 @@ func _check_distance():
 		if capture_camera.is_position_in_frustum(target_position):
 			var distance = global_transform.origin.distance_to(target_position)
 			if distance >= NEAR_DISTANCE  and distance <= FAR_DISTANCE:
-				GlobalPosition.update_can_shoot(true)
+				if is_visible_to_player(target):
+					GlobalPosition.update_can_shoot(true)
+				else:
+					GlobalPosition.update_can_shoot(false)
 			else:
 				GlobalPosition.update_can_shoot(false)
 		else:
 			GlobalPosition.update_can_shoot(false)
 			#print(" Esta visible ", target.name, "distance ", distance)
+
 
 func _set_current_target(current_target: CSGPrimitive3D):
 	target = current_target

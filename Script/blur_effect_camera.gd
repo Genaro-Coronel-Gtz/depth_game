@@ -1,22 +1,27 @@
 extends Camera3D
 
-@onready var attrs := CameraAttributesPhysical.new()
+@onready var attrs := CameraAttributesPractical.new()
 
 func _ready():
-	print(" se ejecuta el attrs de capture camera ")
-	attributes = attrs
+	pass
+	## Activamos el desenfoque cercano
+	#attrs.dof_blur_near_enabled = true
+	#
+	#attrs.dof_blur_near_distance = 5.0  # A partir de aquí empieza el enfoque
+	#attrs.dof_blur_near_transition = 1.5  # Transición suave desde 1.5m antes
+#
+	## Activamos el desenfoque lejano
+	#attrs.dof_blur_far_enabled = true
+	#attrs.dof_blur_far_distance = 10.0  # A partir de aquí empieza el desenfoque lejano
+	#attrs.dof_blur_far_transition = 5.0  # Transición de enfoque hasta 9m
+#
+	## Intensidad del desenfoque
+	#attrs.dof_blur_amount = 0.5  # Puedes subirlo si deseas un efecto más fuerte
+#
+	#self.attributes = attrs
 
-	# Establece la distancia al plano de enfoque (en unidades del mundo 3D)
-	attrs.frustum_focus_distance = 5.0
-	# Controla la fuerza del desenfoque: entre más pequeño el número, más desenfoque
-	attrs.exposure_aperture = 0.2
-
-	# Longitud focal (zoom): afecta cuánto cambia la profundidad de campo
-	attrs.frustum_focal_length = 50.0  # en mm, típicamente entre 35 - 85
-
-	# Establece los límites del frustum (opcional)
-	attrs.frustum_near = 1
-	attrs.frustum_far = 20
-
-	# Asigna los atributos físicos a la cámara
-	self.attributes = attrs
+#esto es para que se enfoque de acuerdo a una posicion que se le envia (target.global_position)
+#y la posicion actual de la camara
+#var focus_distance = global_position.distance_to(target.global_position)
+#self.dof_blur_far_distance = lerp(self.dof_blur_far_distance, focus_distance, delta * 5.0)
+#self.dof_blur_near_distance = lerp(self.dof_blur_near_distance, focus_distance * 0.5, delta * 5.0)

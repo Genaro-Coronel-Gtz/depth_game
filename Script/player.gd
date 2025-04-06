@@ -6,13 +6,26 @@ var mouse_sensitivity = 0.00050
 
 @export var jump_velocity = 6.0
 @onready var capture_camera: Camera3D = $CaptureCamera
+@onready var target: CSGPrimitive3D = null
 
 var capture_camera_active = false
 
-#func _ready() -> void:
-	#pass
+func _ready() -> void:
+	if GlobalPosition:
+		GlobalPosition.connect("set_nearest_target", Callable(self, "_set_current_target"))
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
+
+func _check_distance():
+	if target:
+		var target_position = target.global_transform.origin
+		if capture_camera.is_position_in_frustum(target_position):
+			print(" Esta visible ", target.name)
+		else:
+			print(" no esta visible")
+
+func _set_current_target(current_target: CSGPrimitive3D):
+	target = current_target
+
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity)
@@ -75,4 +88,5 @@ func _physics_process(delta):
 	velocity.x = movement_dir.x * speed
 	velocity.z = movement_dir.z * speed
 	
+	_check_distance()
 	move_and_slide()

@@ -4,9 +4,6 @@
 [ext_resource type="Script" uid="uid://bwbaooqcmqc03" path="res://Script/blur_effect_camera.gd" id="2_cvnsp"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_cvnsp"]
-dof_blur_far_enabled = true
-dof_blur_near_enabled = true
-dof_blur_amount = 0.3
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l7m1b"]
 

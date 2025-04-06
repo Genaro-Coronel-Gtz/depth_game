@@ -9,19 +9,32 @@ var mouse_sensitivity = 0.00050
 @onready var target: CSGPrimitive3D = null
 
 var capture_camera_active = false
+var NEAR_DISTANCE : float = 0
+var FAR_DISTANCE : float = 0
+
+func _config_limits() -> void:
+	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
+	FAR_DISTANCE = capture_camera.attributes.dof_blur_far_distance
 
 func _ready() -> void:
+	_config_limits()
 	if GlobalPosition:
 		GlobalPosition.connect("set_nearest_target", Callable(self, "_set_current_target"))
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+	
 func _check_distance():
-	if target:
+	GlobalPosition.update_player_position(position)
+	if target and capture_camera_active:
 		var target_position = target.global_transform.origin
 		if capture_camera.is_position_in_frustum(target_position):
-			print(" Esta visible ", target.name)
+			var distance = global_transform.origin.distance_to(target_position)
+			if distance >= NEAR_DISTANCE  and distance <= FAR_DISTANCE:
+				GlobalPosition.update_can_shoot(true)
+			else:
+				GlobalPosition.update_can_shoot(false)
 		else:
-			print(" no esta visible")
+			GlobalPosition.update_can_shoot(false)
+			#print(" Esta visible ", target.name, "distance ", distance)
 
 func _set_current_target(current_target: CSGPrimitive3D):
 	target = current_target
@@ -42,11 +55,12 @@ func _input(event):
 		_shoot_cam()
 
 func _toggle_cam():
-	
-	if capture_camera_active:
+	if not capture_camera_active:
 		capture_camera.current = true
+		GlobalPosition.set_camera(capture_camera)
 	else:
 		$Camera3D.current = true
+		GlobalPosition.set_camera($Camera3D)
 
 	capture_camera_active = !capture_camera_active
 

@@ -2,6 +2,7 @@ extends Node
 
 @onready var World: Node3D = $Prototipo
 @onready var UI : CanvasLayer = $UI
+@onready var Widgets: CanvasLayer = $Widgets
 @onready var StartButton: Button = $UI/Control/PanelContainer/Panel/Button
 
 # Targets
@@ -33,20 +34,22 @@ func _process(delta: float) -> void:
 	_get_nearset_object()
 
 func _ready() -> void:
-	#GlobalPosition.update_target(target_box)
 	targets = [target_box, target_cilinder]
-	StartButton.pressed.connect(_on_boton_pressed)
 	World.visible = false
+	Widgets.visible = false
 	UI.visible = true
+	StartButton.pressed.connect(_on_boton_pressed)
 	
 func _on_boton_pressed():
 	UI.visible = false
 	World.visible = true
+	Widgets.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
 	if event.is_action_pressed("open_ui"):
 		UI.visible = true
 		World.visible = false
+		Widgets.visible = false
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		

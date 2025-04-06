@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dqe37fah5kkke"]
+[gd_scene load_steps=9 format=3 uid="uid://dqe37fah5kkke"]
 
 [ext_resource type="Script" uid="uid://civw23vgxjey5" path="res://Scenes/main.gd" id="1_uacpp"]
+[ext_resource type="Script" uid="uid://n0r3huk31goq" path="res://Scenes/widgets.gd" id="3_myvrv"]
 [ext_resource type="PackedScene" uid="uid://dbt1a88wxs1x5" path="res://Scenes/player.tscn" id="10_sp2pw"]
 
 [sub_resource type="Environment" id="Environment_uacpp"]
@@ -9,10 +10,14 @@
 size = Vector2(50, 50)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_myvrv"]
-size = Vector3(20, 0.5, 20)
+size = Vector3(50, 0.5, 50)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uacpp"]
 disable_receive_shadows = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_myvrv"]
+font_size = 20
+font_color = Color(0.592043, 0.999287, 0.578065, 1)
 
 [node name="Node" type="Node"]
 script = ExtResource("1_uacpp")
@@ -56,6 +61,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4907, 0.498474, 14.043)
 size = Vector3(1, 1.99695, 1.45703)
 
 [node name="UI" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="Control" type="Control" parent="UI"]
 layout_mode = 3
@@ -91,3 +97,61 @@ offset_top = 72.0
 offset_right = 77.0
 offset_bottom = 103.0
 text = "Iniciar"
+
+[node name="Widgets" type="CanvasLayer" parent="."]
+script = ExtResource("3_myvrv")
+
+[node name="Control" type="Control" parent="Widgets"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 228.0
+offset_bottom = 79.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Widgets/Control"]
+layout_mode = 0
+offset_right = 428.0
+offset_bottom = 215.0
+
+[node name="Panel" type="Panel" parent="Widgets/Control/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Widgets/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 12.0
+offset_right = 155.0
+offset_bottom = 35.0
+text = "Fotos tomadas: 0/5"
+
+[node name="Label2" type="Label" parent="Widgets/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 45.0
+offset_right = 50.0
+offset_bottom = 68.0
+text = "Dof Near: "
+
+[node name="Label3" type="Label" parent="Widgets/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 81.0
+offset_right = 51.0
+offset_bottom = 104.0
+text = "Dof Far:"
+
+[node name="Label4" type="Label" parent="Widgets/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 207.0
+offset_top = 13.0
+offset_right = 304.0
+offset_bottom = 41.0
+text = "Can shoot"
+label_settings = SubResource("LabelSettings_myvrv")
+
+[node name="Label5" type="Label" parent="Widgets/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 125.0
+offset_right = 78.0
+offset_bottom = 148.0
+text = "Target: "

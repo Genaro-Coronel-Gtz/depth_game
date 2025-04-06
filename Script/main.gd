@@ -44,12 +44,15 @@ func _ready() -> void:
 	DialogueUI.visible = false
 	MenuUI.visible = false
 	UI.visible = true
-	StartButton.pressed.connect(_start_intro)
+	#StartButton.pressed.connect(_start_intro)
+	StartButton.pressed.connect(_show_menu)
+	ResumeButton.pressed.connect(_start_game)
 	
 func _start_intro():
 	World.visible = false
 	Widgets.visible = false
 	UI.visible = false
+	MenuUI.visible = false
 	DialogueUI.visible = true
 	var gui = DialogueUI
 	gui.show_dialogue_sequence(
@@ -66,14 +69,20 @@ func _start_game():
 	UI.visible = false
 	World.visible = true
 	Widgets.visible = true
+	MenuUI.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+func _show_menu():
+	# pausar la interfaz tmbn
+	UI.visible = false
+	World.visible = false
+	Widgets.visible = false
+	MenuUI.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _input(event):
 	if event.is_action_pressed("menu_ui"):
-		# pausar la interfaz tmbn
-		UI.visible = false
-		World.visible = false
-		Widgets.visible = false
-		MenuUI.visible = true
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		_show_menu()
+		
+
 		

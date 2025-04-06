@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dqe37fah5kkke"]
+[gd_scene load_steps=14 format=3 uid="uid://dqe37fah5kkke"]
 
 [ext_resource type="Script" uid="uid://civw23vgxjey5" path="res://Script/main.gd" id="1_uacpp"]
 [ext_resource type="Theme" uid="uid://45vscl4bj0tw" path="res://Themes/depth_global_theme.tres" id="3_hec2n"]
@@ -26,8 +26,6 @@ font_color = Color(0.176471, 0.909804, 0.913725, 0.603922)
 [sub_resource type="LabelSettings" id="LabelSettings_myvrv"]
 font_size = 20
 font_color = Color(0.592043, 0.999287, 0.578065, 1)
-
-[sub_resource type="Theme" id="Theme_hocx8"]
 
 [node name="Node" type="Node"]
 script = ExtResource("1_uacpp")
@@ -238,30 +236,15 @@ text = "Menu"
 
 [node name="Resume" type="Button" parent="MenuUI/PanelContainer/Panel"]
 layout_mode = 0
-offset_left = 507.0
-offset_top = 644.0
-offset_right = 786.0
-offset_bottom = 709.0
+offset_left = 805.0
+offset_top = 364.0
+offset_right = 1131.0
+offset_bottom = 466.0
 theme = ExtResource("3_hec2n")
 theme_override_styles/normal = ExtResource("4_imim1")
 text = "Resume"
 
 [node name="MarginContainer" type="MarginContainer" parent="MenuUI/PanelContainer/Panel"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 197.0
-offset_right = 1141.0
-offset_bottom = 556.0
-theme = SubResource("Theme_hocx8")
-
-[node name="GridContainer" type="GridContainer" parent="MenuUI/PanelContainer/Panel/MarginContainer"]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="MenuUI/PanelContainer/Panel/MarginContainer/GridContainer"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="MenuUI/PanelContainer/Panel/MarginContainer/GridContainer/Control"]
-layout_mode = 2
-offset_top = -4.0
-offset_right = 20.0
-offset_bottom = 16.0
+offset_right = 40.0
+offset_bottom = 40.0

@@ -2,8 +2,12 @@ extends Node
 
 @onready var World: Node3D = $Prototipo
 @onready var UI : CanvasLayer = $UI
-@onready var Widgets: CanvasLayer = $Widgets
+@onready var Widgets: CanvasLayer = $WidgetsUI
+@onready var DialogueUI: CanvasLayer = $DialogueUI
+@onready var MenuUI: CanvasLayer = $MenuUI
+
 @onready var StartButton: Button = $UI/Control/PanelContainer/Panel/Button
+@onready var ResumeButton: Button = $MenuUI/PanelContainer/Panel/Resume
 
 # Targets
 @onready var target_box := $Prototipo/CSGBox3D
@@ -37,19 +41,39 @@ func _ready() -> void:
 	targets = [target_box, target_cilinder]
 	World.visible = false
 	Widgets.visible = false
+	DialogueUI.visible = false
+	MenuUI.visible = false
 	UI.visible = true
-	StartButton.pressed.connect(_on_boton_pressed)
+	StartButton.pressed.connect(_start_intro)
 	
-func _on_boton_pressed():
+func _start_intro():
+	World.visible = false
+	Widgets.visible = false
+	UI.visible = false
+	DialogueUI.visible = true
+	var gui = DialogueUI
+	gui.show_dialogue_sequence(
+		[
+			"¡Hola! Bienvenido a la aventura.",
+			"Tu misión será explorar este mundo misterioso.",
+			"Cuando estés listo... ¡comencemos!"
+		],
+		func _start():
+			_start_game()
+	)
+	
+func _start_game():
 	UI.visible = false
 	World.visible = true
 	Widgets.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
-	if event.is_action_pressed("open_ui"):
-		UI.visible = true
+	if event.is_action_pressed("menu_ui"):
+		# pausar la interfaz tmbn
+		UI.visible = false
 		World.visible = false
 		Widgets.visible = false
+		MenuUI.visible = true
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		

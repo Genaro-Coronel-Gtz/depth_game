@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://dqe37fah5kkke"]
 
-[ext_resource type="Script" uid="uid://bj8cdvfs4xtkh" path="res://Scenes/LoadBlur.gd" id="1_uacpp"]
+[ext_resource type="Script" uid="uid://civw23vgxjey5" path="res://Scenes/main.gd" id="1_uacpp"]
 [ext_resource type="PackedScene" uid="uid://dbt1a88wxs1x5" path="res://Scenes/player.tscn" id="10_sp2pw"]
 
-[sub_resource type="Environment" id="Environment_ky065"]
+[sub_resource type="Environment" id="Environment_uacpp"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_uacpp"]
 size = Vector2(20, 20)
@@ -11,11 +11,40 @@ size = Vector2(20, 20)
 [sub_resource type="BoxShape3D" id="BoxShape3D_myvrv"]
 size = Vector3(20, 0.5, 20)
 
-[node name="Prototipo" type="Node3D"]
+[node name="Node" type="Node"]
+script = ExtResource("1_uacpp")
+
+[node name="Prototipo" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Prototipo"]
+environment = SubResource("Environment_uacpp")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Prototipo"]
+transform = Transform3D(1, 0, 0, 0, -0.5, 0.866025, 0, -0.866025, -0.5, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Player" parent="Prototipo" instance=ExtResource("10_sp2pw")]
+transform = Transform3D(0.5616, 0, 0, 0, 0.5616, 0, 0, 0, 0.5616, 0, 0, 0.984984)
+speed = 7
+
+[node name="Ground" type="StaticBody3D" parent="Prototipo"]
+collision_mask = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Prototipo/Ground"]
+mesh = SubResource("PlaneMesh_uacpp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Prototipo/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+shape = SubResource("BoxShape3D_myvrv")
+
+[node name="TestBox" type="CSGBox3D" parent="Prototipo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 2.5, -5)
+size = Vector3(3, 5, 3)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Prototipo"]
+transform = Transform3D(0.998108, 0.0614841, 0, -0.0614841, 0.998108, 0, 0, 0, 1, -4.94849, 0, 0.775311)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-follow_viewport_enabled = true
-script = ExtResource("1_uacpp")
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -25,7 +54,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,30 +62,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_ky065")
+[node name="Panel" type="Panel" parent="CanvasLayer/Control/PanelContainer"]
+layout_mode = 2
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.5, 0.866025, 0, -0.866025, -0.5, 0, 6, 0)
-shadow_enabled = true
+[node name="Label" type="Label" parent="CanvasLayer/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 14.0
+offset_right = 206.0
+offset_bottom = 37.0
+text = "Photo Game"
 
-[node name="Player" parent="." instance=ExtResource("10_sp2pw")]
-transform = Transform3D(0.5616, 0, 0, 0, 0.5616, 0, 0, 0, 0.5616, 0, 0, 0.984984)
-speed = 7
-
-[node name="Ground" type="StaticBody3D" parent="."]
-collision_mask = 2
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("PlaneMesh_uacpp")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
-shape = SubResource("BoxShape3D_myvrv")
-
-[node name="TestBox" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 2.5, -5)
-size = Vector3(3, 5, 3)
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
-transform = Transform3D(0.998108, 0.0614841, 0, -0.0614841, 0.998108, 0, 0, 0, 1, -4.94849, 0, 0.775311)
+[node name="Button" type="Button" parent="CanvasLayer/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 72.0
+offset_right = 77.0
+offset_bottom = 103.0
+text = "Iniciar"

@@ -9,8 +9,9 @@ var mouse_sensitivity = 0.00050
 
 var capture_camera_active = false
 
-func _ready() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+#func _ready() -> void:
+	#pass
+	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:

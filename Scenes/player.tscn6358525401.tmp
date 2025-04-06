@@ -1,4 +1,9 @@
-extends Camera3D
+[gd_scene load_steps=5 format=3 uid="uid://dbt1a88wxs1x5"]
+
+[ext_resource type="Script" uid="uid://xtokxmde8k1l" path="res://Script/player.gd" id="1_ajj78"]
+
+[sub_resource type="GDScript" id="GDScript_v0iea"]
+script/source = "extends Camera3D
 
 @export var target_path: NodePath
 var target: Node3D
@@ -36,3 +41,28 @@ func enable_dof():
 	
 	# Intensidad general del desenfoque
 	camera_attributes.dof_blur_amount = 0.6
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l7m1b"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cvnsp"]
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_ajj78")
+
+[node name="CaptureCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+fov = 68.8
+script = SubResource("GDScript_v0iea")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_l7m1b")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_cvnsp")

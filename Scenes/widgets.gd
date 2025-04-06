@@ -6,6 +6,8 @@ var camera: Camera3D
 @onready var can_shoot: Label = $Control/PanelContainer/Panel/Label4
 @onready var target_lbl: Label = $Control/PanelContainer/Panel/Label5
 
+var capture_camera_active = false
+
 func _ready() -> void:
 	near.visible = false
 	far.visible = false
@@ -18,7 +20,7 @@ func _ready() -> void:
 		GlobalPosition.connect("set_player_position", Callable(self, "_set_player_position"))
 		
 func _set_player_position(pos: Vector3):
-	if GlobalPosition and GlobalPosition.current_target:
+	if capture_camera_active and GlobalPosition and GlobalPosition.current_target:
 		target_lbl.visible = true
 		var distance_to_target = pos.distance_to(GlobalPosition.current_target.global_transform.origin)
 		target_lbl.text = "Target Distance: " + "%0.2f" % distance_to_target
@@ -39,7 +41,11 @@ func _set_current_camera(cam: Camera3D):
 			far.visible = true
 			near.text = "Near " + str(attrs.dof_blur_near_distance)
 			far.text = "Far: " + str(attrs.dof_blur_far_distance)
+			capture_camera_active = true
 	else:
+		capture_camera_active = false
 		near.visible = false
 		far.visible = false
+		can_shoot.visible = false
+		target_lbl.visible = false
 		# print("Camara sin DOF")

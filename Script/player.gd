@@ -52,6 +52,7 @@ func _input(event):
 		_toggle_cam()
 		
 	if event.is_action_pressed("shoot_cam"):
+		_check_distance()
 		_shoot_cam()
 
 func _toggle_cam():
@@ -61,31 +62,29 @@ func _toggle_cam():
 	else:
 		$Camera3D.current = true
 		GlobalPosition.set_camera($Camera3D)
+		GlobalPosition.update_can_shoot(false)
 
 	capture_camera_active = !capture_camera_active
 
 func _shoot_cam():
-	await RenderingServer.frame_post_draw
-	
-	var image = null
-	
-	#image = $Camera3D.get_viewport().get_texture().get_image()
-	image = capture_camera.get_viewport().get_texture().get_image()
-	
-	#if capture_camera_active:
-		#image = old_cam_layer.get_viewport().get_texture().get_image()
-	#else:
-		#image = capture_subviewport.get_viewport().get_texture().get_image()
-		
-	var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
-	var path = "res://screen_shots/captura_" + timestamp + ".png"
-	
-	var err = image.save_png(path)
-	
-	if err == OK:
-		print(" Captura guardada en: ", path)
+	if GlobalPosition.can_shoot:
+		await RenderingServer.frame_post_draw
+		var image = null
+		#image = $Camera3D.get_viewport().get_texture().get_image()
+		image = capture_camera.get_viewport().get_texture().get_image()
+		#if capture_camera_active:
+			#image = old_cam_layer.get_viewport().get_texture().get_image()
+		#else:
+			#image = capture_subviewport.get_viewport().get_texture().get_image()
+		var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
+		var path = "res://screen_shots/captura_" + timestamp + ".png"
+		var err = image.save_png(path)
+		if err == OK:
+			print(" Captura guardada en: ", path)
+		else:
+			print(" Error al guardar imagen: ", err)
 	else:
-		print(" Error al guardar imagen: ", err)
+		print("No puedes tomar la foto, no esta en foco!")
 
 func _physics_process(delta):
 	if not is_on_floor():

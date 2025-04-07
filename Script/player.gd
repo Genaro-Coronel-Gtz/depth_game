@@ -7,6 +7,7 @@ var mouse_sensitivity = 0.00050
 @export var jump_velocity = 6.0
 @onready var capture_camera: Camera3D = $CaptureCamera
 @onready var target: CSGPrimitive3D = null
+@onready var timer = $Timer
 
 var capture_camera_active = false
 var NEAR_DISTANCE : float = 0
@@ -89,18 +90,35 @@ func _toggle_cam():
 
 	capture_camera_active = !capture_camera_active
 
+func _on_timer_timeout():
+	GlobalPosition.update_photos()
+
+func directory_exists(path: String) -> void:
+	var dir = DirAccess.open("user://")
+	if dir == null:
+		push_error("No se pudo acceder a user://")
+		return
+
+	if not dir.dir_exists(path):
+		var result = dir.make_dir(path)
+		if result == OK:
+			print("Directorio creado: user://%s" % path)
+		else:
+			push_error("No se pudo crear el directorio: %s (código: %s)" % [path, result])
+
+
 func _shoot_cam():
 	if GlobalPosition.can_shoot:
+		directory_exists("screen_shots")
+		
+		timer.start(0.5)
 		await RenderingServer.frame_post_draw
 		var image = null
-		#image = $Camera3D.get_viewport().get_texture().get_image()
+
 		image = capture_camera.get_viewport().get_texture().get_image()
-		#if capture_camera_active:
-			#image = old_cam_layer.get_viewport().get_texture().get_image()
-		#else:
-			#image = capture_subviewport.get_viewport().get_texture().get_image()
+
 		var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
-		var path = "res://screen_shots/captura_" + timestamp + ".png"
+		var path = "user://screen_shots/captura_" + timestamp + ".png"
 		var err = image.save_png(path)
 		if err == OK:
 			print(" Captura guardada en: ", path)

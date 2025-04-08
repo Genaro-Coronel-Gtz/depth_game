@@ -13,6 +13,7 @@ var capture_camera_active = false
 var NEAR_DISTANCE : float = 0
 var FAR_DISTANCE : float = 0
 const COLLISION_MASK_OBSTACLES = 1
+var target_id = null
 
 func _config_limits() -> void:
 	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
@@ -24,15 +25,17 @@ func _ready() -> void:
 		GlobalPosition.connect("set_nearest_target", Callable(self, "_set_current_target"))
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-func is_visible_to_player(current_target: CSGPrimitive3D):
+func is_visible_to_player():
 	var space_state = get_world_3d().direct_space_state
 	
 	var ray_origin = global_transform.origin
-	var ray_target = current_target.global_transform.origin
+	var ray_target = target.global_transform.origin
 	
 	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_target)
 	query.collision_mask = COLLISION_MASK_OBSTACLES
-	query.exclude = [self.get_rid()]
+	
+	var ground = get_node("/root/Node/Prototipo/Ground")
+	query.exclude = [self.get_rid(), ground.get_rid()]
 	
 	var result = space_state.intersect_ray(query)
 	
@@ -49,7 +52,7 @@ func _check_distance():
 		if capture_camera.is_position_in_frustum(target_position):
 			var distance = global_transform.origin.distance_to(target_position)
 			if distance >= NEAR_DISTANCE  and distance <= FAR_DISTANCE:
-				if is_visible_to_player(target):
+				if is_visible_to_player():
 					GlobalPosition.update_can_shoot(true)
 				else:
 					GlobalPosition.update_can_shoot(false)
@@ -57,11 +60,14 @@ func _check_distance():
 				GlobalPosition.update_can_shoot(false)
 		else:
 			GlobalPosition.update_can_shoot(false)
+	else:
+		GlobalPosition.update_can_shoot(false)
 			#print(" Esta visible ", target.name, "distance ", distance)
 
 
 func _set_current_target(current_target: CSGPrimitive3D):
 	target = current_target
+	target_id = current_target.get_meta("id")
 
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -106,19 +112,32 @@ func directory_exists(path: String) -> void:
 		else:
 			push_error("No se pudo crear el directorio: %s (código: %s)" % [path, result])
 
+func _is_target_photographed() -> bool:
+	var photos_phat = Photos.load()
+	var current_tphoto_path = "user://screen_shots/obj_" + target_id + ".png" 
+	if current_tphoto_path in photos_phat:
+		return true
+	else:
+		return false
 
 func _shoot_cam():
 	if GlobalPosition.can_shoot:
 		directory_exists("screen_shots")
+		var photographed = _is_target_photographed()
+		if photographed:
+			print(" Ya ha sido photografiado el Objeto", target_id)
+			return
+		
+		print("ya no deberia llegar aca")
 		
 		timer.start(0.5)
 		await RenderingServer.frame_post_draw
 		var image = null
 
 		image = capture_camera.get_viewport().get_texture().get_image()
-
+		
 		var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
-		var path = "user://screen_shots/captura_" + timestamp + ".png"
+		var path = "user://screen_shots/obj_" + target_id + ".png"
 		var err = image.save_png(path)
 		if err == OK:
 			print(" Captura guardada en: ", path)

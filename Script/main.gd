@@ -38,7 +38,15 @@ func _process(delta: float) -> void:
 	_get_nearset_object()
 
 func _ready() -> void:
+	_set_targets()
+	_init_ui()
+	
+func _set_targets() -> void:
+	target_box.set_meta("id", "box_model")
+	target_cilinder.set_meta("id", "cilinder_model")
 	targets = [target_box, target_cilinder]
+	
+func _init_ui():
 	World.visible = false
 	Widgets.visible = false
 	DialogueUI.visible = false

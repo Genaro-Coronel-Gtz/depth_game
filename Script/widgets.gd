@@ -36,11 +36,11 @@ func _can_shoot(can: bool) -> void:
 	settings.font_size = 25
 	
 	if is_current_target_photographed:
-		can_shoot_lbl_txt = "¡Ya fotografiado el objeto" 
+		can_shoot_lbl_txt = tr("already_photographed")
 		settings.font_color = Color.html("#b10004")
 		can_shoot.label_settings = settings
 	else:
-		can_shoot_lbl_txt = "¡You Can shoot!"
+		can_shoot_lbl_txt = tr("shoot")
 		settings.font_color = Color.html("#97ff93")
 		can_shoot.label_settings = settings
 	_update_label_texts()

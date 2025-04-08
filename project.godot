@@ -79,6 +79,10 @@ menu_ui={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations/translations.en.translation", "res://translations/translations.es.translation")
+
 [layer_names]
 
 3d_physics/layer_1="Ground"

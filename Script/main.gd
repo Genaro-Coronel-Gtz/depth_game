@@ -47,6 +47,7 @@ func _set_targets() -> void:
 	targets = [target_box, target_cilinder]
 	
 func _init_ui():
+	TranslationServer.set_locale("en") 
 	World.visible = false
 	Widgets.visible = false
 	DialogueUI.visible = false

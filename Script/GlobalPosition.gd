@@ -5,6 +5,7 @@ signal set_current_camera(camera: Camera3D)
 signal set_can_shoot(can: bool)
 signal set_player_position(player_position: Vector3)
 signal set_update_photos
+signal set_is_photographed(photographed: bool)
 
 var current_target: CSGPrimitive3D = null
 var current_camera: Camera3D = null
@@ -29,3 +30,6 @@ func update_player_position(pos: Vector3):
 
 func update_photos():
 	emit_signal("set_update_photos")
+	
+func update_object_photographed(photographed: bool):
+	emit_signal("set_is_photographed", photographed)

@@ -1,11 +1,9 @@
 extends CanvasLayer
 @onready var container = $PanelContainer/Panel/MarginContainer
 @onready var message = $PanelContainer/Panel/Label3
-#@onready var grid = $PanelContainer/Panel/MarginContainer/GridContainer
 
 func _render_photos():
 	var routes = Photos.load()
-	print(" Se ejecuta de nuevo load photos #: ", routes.size())
 	
 	if routes.size() > 0:
 		container.visible = true

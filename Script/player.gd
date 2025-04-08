@@ -14,6 +14,7 @@ var NEAR_DISTANCE : float = 0
 var FAR_DISTANCE : float = 0
 const COLLISION_MASK_OBSTACLES = 1
 var target_id = null
+var current_target_photographed :bool = false
 
 func _config_limits() -> void:
 	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
@@ -53,6 +54,7 @@ func _check_distance():
 			var distance = global_transform.origin.distance_to(target_position)
 			if distance >= NEAR_DISTANCE  and distance <= FAR_DISTANCE:
 				if is_visible_to_player():
+					_is_target_photographed()
 					GlobalPosition.update_can_shoot(true)
 				else:
 					GlobalPosition.update_can_shoot(false)
@@ -112,24 +114,22 @@ func directory_exists(path: String) -> void:
 		else:
 			push_error("No se pudo crear el directorio: %s (código: %s)" % [path, result])
 
-func _is_target_photographed() -> bool:
+func _is_target_photographed() -> void:
 	var photos_phat = Photos.load()
 	var current_tphoto_path = "user://screen_shots/obj_" + target_id + ".png" 
 	if current_tphoto_path in photos_phat:
-		return true
+		GlobalPosition.update_object_photographed(true)
+		current_target_photographed = true
 	else:
-		return false
+		GlobalPosition.update_object_photographed(false)
+		current_target_photographed = false
 
 func _shoot_cam():
 	if GlobalPosition.can_shoot:
 		directory_exists("screen_shots")
-		var photographed = _is_target_photographed()
-		if photographed:
-			print(" Ya ha sido photografiado el Objeto", target_id)
+		if current_target_photographed:
 			return
-		
-		print("ya no deberia llegar aca")
-		
+			
 		timer.start(0.5)
 		await RenderingServer.frame_post_draw
 		var image = null

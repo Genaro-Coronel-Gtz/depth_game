@@ -1,6 +1,12 @@
 extends CanvasLayer
 @onready var container = $PanelContainer/Panel/MarginContainer
 @onready var message = $PanelContainer/Panel/Label3
+@onready var photosLbl = $PanelContainer/Panel/Label2
+
+
+func _update_ui() -> void:
+	print("Update UI")
+	photosLbl.text = tr("photos")
 
 func _render_photos():
 	var routes = Photos.load()
@@ -33,8 +39,6 @@ func _render_photos():
 				grid.add_child(tex)
 			else:
 				print("No se pudo cargar la imagen: %s" % err)
-				
-				
 		container.add_child(grid)
 			
 	else:
@@ -48,4 +52,6 @@ func _update_photos():
 func _ready():
 	if GlobalPosition:
 		GlobalPosition.connect("set_update_photos", Callable(self, "_update_photos"))
+		GlobalPosition.connect("set_lang", Callable(self, "_update_ui"))
 	_render_photos()
+	_update_ui()

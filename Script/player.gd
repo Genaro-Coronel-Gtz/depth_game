@@ -64,8 +64,6 @@ func _check_distance():
 			GlobalPosition.update_can_shoot(false)
 	else:
 		GlobalPosition.update_can_shoot(false)
-			#print(" Esta visible ", target.name, "distance ", distance)
-
 
 func _set_current_target(current_target: CSGPrimitive3D):
 	target = current_target

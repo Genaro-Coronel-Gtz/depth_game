@@ -7,6 +7,7 @@ signal set_player_position(player_position: Vector3)
 signal set_update_photos
 signal set_is_photographed(photographed: bool)
 signal set_lang()
+signal shake()
 
 var current_target: CSGPrimitive3D = null
 var current_camera: Camera3D = null
@@ -37,3 +38,6 @@ func update_object_photographed(photographed: bool):
 	
 func update_lang() -> void:
 	emit_signal("set_lang")
+	
+func update_shake() -> void:
+	emit_signal("shake")

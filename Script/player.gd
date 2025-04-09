@@ -25,6 +25,7 @@ var current_target_photographed :bool = false
 var posture_states = [HEIGHT_STAND, HEIGHT_CROUCH, HEIGHT_FACE_DOWN]
 var current_posture_index = 0
 
+
 func _config_limits() -> void:
 	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
 	FAR_DISTANCE = capture_camera.attributes.dof_blur_far_distance
@@ -72,7 +73,6 @@ func change_height() -> void:
 	current_posture_index = (current_posture_index + 1) % posture_states.size()
 	var new_height = posture_states[current_posture_index]
 	transition_to_height(new_height)
-
 
 func _check_distance():
 	GlobalPosition.update_player_position(position)
@@ -158,6 +158,7 @@ func _shoot_cam():
 		directory_exists("screen_shots")
 		
 		if current_target_photographed:
+			GlobalPosition.update_shake() #Shake camera if object is already photographed 
 			return
 			
 		timer.start(0.5)

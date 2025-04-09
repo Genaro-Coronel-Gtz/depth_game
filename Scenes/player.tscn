@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dbt1a88wxs1x5"]
+[gd_scene load_steps=7 format=3 uid="uid://dbt1a88wxs1x5"]
 
 [ext_resource type="Script" uid="uid://xtokxmde8k1l" path="res://Script/player.gd" id="1_ajj78"]
+[ext_resource type="Script" uid="uid://eipxogq1ts86" path="res://Scenes/camera_pivot.gd" id="2_6t5aa"]
 [ext_resource type="Script" uid="uid://bwbaooqcmqc03" path="res://Script/blur_effect_camera.gd" id="2_cvnsp"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l7m1b"]
@@ -27,6 +28,7 @@ one_shot = true
 
 [node name="CameraPivot" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("2_6t5aa")
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

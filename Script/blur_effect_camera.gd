@@ -3,6 +3,7 @@ extends Camera3D
 @onready var attrs := CameraAttributesPractical.new()
 
 func _ready():
+	return
 	# Activamos el desenfoque cercano
 	attrs.dof_blur_near_enabled = true
 	

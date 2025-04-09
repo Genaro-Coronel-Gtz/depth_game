@@ -5,7 +5,9 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var mouse_sensitivity = 0.00050
 
 @export var jump_velocity = 6.0
-@onready var capture_camera: Camera3D = $CaptureCamera
+@onready var capture_camera: Camera3D = $CameraPivot/CaptureCamera
+@onready var first_camera: Camera3D = $CameraPivot/Camera3D
+@onready var camera_pivot = $CameraPivot
 @onready var target: CSGPrimitive3D = null
 @onready var timer = $Timer
 
@@ -16,12 +18,20 @@ const COLLISION_MASK_OBSTACLES = 1
 var target_id = null
 var current_target_photographed :bool = false
 
+@export var HEIGHT_STAND = 1.2
+@export var HEIGHT_CROUCH = 0.8
+@export var HEIGHT_FACE_DOWN = 0.4
+
+var posture_states = [HEIGHT_STAND, HEIGHT_CROUCH, HEIGHT_FACE_DOWN]
+var current_posture_index = 0
+
 func _config_limits() -> void:
 	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
 	FAR_DISTANCE = capture_camera.attributes.dof_blur_far_distance
 
 func _ready() -> void:
 	_config_limits()
+	camera_pivot.position.y = posture_states[0]
 	if GlobalPosition:
 		GlobalPosition.connect("set_nearest_target", Callable(self, "_set_current_target"))
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -44,7 +54,25 @@ func is_visible_to_player():
 		return result["collider"] == target
 	else:
 		return true
-	
+
+
+func transition_to_height(height: float):
+	var tween = create_tween()
+	var new_position = camera_pivot.position
+	new_position.y = height
+	tween.tween_property(
+		camera_pivot,
+		"position",
+		new_position,
+		0.3
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func change_height() -> void:
+	current_posture_index = (current_posture_index + 1) % posture_states.size()
+	var new_height = posture_states[current_posture_index]
+	transition_to_height(new_height)
+
 
 func _check_distance():
 	GlobalPosition.update_player_position(position)
@@ -72,8 +100,8 @@ func _set_current_target(current_target: CSGPrimitive3D):
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity)
-		$Camera3D.rotate_x(-event.relative.y * mouse_sensitivity)
-		$Camera3D.rotation.x = clampf($Camera3D.rotation.x, -deg_to_rad(70), deg_to_rad(70))
+		first_camera.rotate_x(-event.relative.y * mouse_sensitivity)
+		first_camera.rotation.x = clampf(first_camera.rotation.x, -deg_to_rad(70), deg_to_rad(70))
 		
 		capture_camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		capture_camera.rotation.x = clampf(capture_camera.rotation.x, -deg_to_rad(70), deg_to_rad(70))
@@ -84,14 +112,17 @@ func _input(event):
 	if event.is_action_pressed("shoot_cam"):
 		_check_distance()
 		_shoot_cam()
+		
+	if event.is_action_pressed("change_posture"):
+		change_height()
 
 func _toggle_cam():
 	if not capture_camera_active:
 		capture_camera.current = true
 		GlobalPosition.set_camera(capture_camera)
 	else:
-		$Camera3D.current = true
-		GlobalPosition.set_camera($Camera3D)
+		first_camera.current = true
+		GlobalPosition.set_camera(first_camera)
 		GlobalPosition.update_can_shoot(false)
 
 	capture_camera_active = !capture_camera_active
@@ -125,18 +156,18 @@ func _is_target_photographed() -> void:
 func _shoot_cam():
 	if GlobalPosition.can_shoot:
 		directory_exists("screen_shots")
+		
 		if current_target_photographed:
 			return
 			
 		timer.start(0.5)
 		await RenderingServer.frame_post_draw
-		var image = null
-
-		image = capture_camera.get_viewport().get_texture().get_image()
 		
-		var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
+		var image = null
+		image = capture_camera.get_viewport().get_texture().get_image()
 		var path = "user://screen_shots/obj_" + target_id + ".png"
 		var err = image.save_png(path)
+		
 		if err == OK:
 			print(" Captura guardada en: ", path)
 		else:

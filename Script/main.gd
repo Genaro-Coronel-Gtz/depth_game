@@ -31,7 +31,6 @@ func _get_nearset_object():
 			closest_target = target
 
 		if closest_target:
-			#print("El target más cercano es:", closest_target.name)
 			GlobalPosition.update_target(closest_target)
 
 func _process(delta: float) -> void:
@@ -92,6 +91,3 @@ func _show_menu():
 func _input(event):
 	if event.is_action_pressed("menu_ui"):
 		_show_menu()
-		
-
-		

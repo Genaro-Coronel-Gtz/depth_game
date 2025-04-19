@@ -5,9 +5,11 @@ extends Node
 @onready var Widgets: CanvasLayer = $WidgetsUI
 @onready var DialogueUI: CanvasLayer = $DialogueUI
 @onready var MenuUI: CanvasLayer = $MenuUI
+@onready var FinishGameUI: CanvasLayer = $FinishGameUI
 
-@onready var StartButton: Button = $UI/Control/PanelContainer/Panel/Button
+@onready var StartButton: Button = $UI/Control/PanelContainer/Panel/StartButton
 @onready var ResumeButton: Button = $MenuUI/PanelContainer/Panel/Resume
+@onready var MainMenuButton: Button = $FinishGameUI/Control/PanelContainer/Panel/MainMenuBtn
 
 # Targets
 @onready var target_box := $Prototipo/CSGBox3D
@@ -35,26 +37,51 @@ func _get_nearset_object():
 
 func _process(delta: float) -> void:
 	_get_nearset_object()
+	
+func _reset_game():
+	print(" Reset game on main.gd ")
+	GlobalPosition.update_can_shoot(false)
+	GlobalPosition.update_photos_number(0)
+	GlobalPosition.update_object_photographed(false)
+	_init_main_screen()
 
 func _ready() -> void:
 	_set_targets()
 	_init_ui()
 	
+	if UI:
+		UI.connect("reset_game", Callable(self, "_reset_game"))
+	if GlobalPosition:
+		GlobalPosition.connect("set_finish_game", Callable(self, "_finish_game"))
+		
+func _finish_game() -> void:
+	print(" Finish game in main.gd")
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	UI.visible = false
+	World.visible = false
+	Widgets.visible = false
+	MenuUI.visible = false
+	FinishGameUI.visible = true
+
 func _set_targets() -> void:
 	target_box.set_meta("id", "box_model")
 	target_cilinder.set_meta("id", "cilinder_model")
 	targets = [target_box, target_cilinder]
 	
-func _init_ui():
-	#TranslationServer.set_locale("en") 
+	
+func _init_main_screen():
 	World.visible = false
 	Widgets.visible = false
 	DialogueUI.visible = false
 	MenuUI.visible = false
+	FinishGameUI.visible = false
 	UI.visible = true
-	#StartButton.pressed.connect(_start_intro)
+	
+func _init_ui():
+	_init_main_screen()
 	StartButton.pressed.connect(_show_menu)
 	ResumeButton.pressed.connect(_start_game)
+	MainMenuButton.pressed.connect(_init_main_screen)
 	
 func _start_intro():
 	World.visible = false
@@ -62,6 +89,7 @@ func _start_intro():
 	UI.visible = false
 	MenuUI.visible = false
 	DialogueUI.visible = true
+	FinishGameUI.visible = false
 	var gui = DialogueUI
 	gui.show_dialogue_sequence(
 		[
@@ -78,6 +106,7 @@ func _start_game():
 	World.visible = true
 	Widgets.visible = true
 	MenuUI.visible = false
+	FinishGameUI.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 func _show_menu():
@@ -86,6 +115,7 @@ func _show_menu():
 	World.visible = false
 	Widgets.visible = false
 	MenuUI.visible = true
+	FinishGameUI.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _input(event):

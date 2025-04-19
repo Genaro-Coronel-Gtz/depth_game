@@ -16,6 +16,7 @@ var NEAR_DISTANCE : float = 0
 var FAR_DISTANCE : float = 0
 const COLLISION_MASK_OBSTACLES = 1
 var target_id = null
+var last_target_id = null
 var current_target_photographed :bool = false
 
 @export var HEIGHT_STAND = 1.2
@@ -29,7 +30,7 @@ var current_posture_index = 0
 func _config_limits() -> void:
 	NEAR_DISTANCE = capture_camera.attributes.dof_blur_near_distance
 	FAR_DISTANCE = capture_camera.attributes.dof_blur_far_distance
-
+	
 func _ready() -> void:
 	_config_limits()
 	camera_pivot.position.y = posture_states[0]
@@ -128,7 +129,7 @@ func _toggle_cam():
 	capture_camera_active = !capture_camera_active
 
 func _on_timer_timeout():
-	GlobalPosition.update_photos()
+	_verify_photos_number()
 
 func directory_exists(path: String) -> void:
 	var dir = DirAccess.open("user://")
@@ -144,14 +145,18 @@ func directory_exists(path: String) -> void:
 			push_error("No se pudo crear el directorio: %s (código: %s)" % [path, result])
 
 func _is_target_photographed() -> void:
-	var photos_phat = Photos.load()
-	var current_tphoto_path = "user://screen_shots/obj_" + target_id + ".png" 
-	if current_tphoto_path in photos_phat:
-		GlobalPosition.update_object_photographed(true)
-		current_target_photographed = true
-	else:
-		GlobalPosition.update_object_photographed(false)
-		current_target_photographed = false
+	if (last_target_id == null) or (target_id != last_target_id):
+		var photos_phat = Photos.load()
+		print("photo phat", photos_phat)
+		var current_tphoto_path = "user://screen_shots/obj_" + target_id + ".png"
+		if current_tphoto_path in photos_phat:
+			GlobalPosition.update_object_photographed(true)
+			current_target_photographed = true
+		else:
+			GlobalPosition.update_object_photographed(false)
+			current_target_photographed = false
+		
+		last_target_id = target_id
 
 func _shoot_cam():
 	if GlobalPosition.can_shoot:
@@ -170,11 +175,18 @@ func _shoot_cam():
 		var err = image.save_png(path)
 		
 		if err == OK:
-			print(" Captura guardada en: ", path)
+			#print(" Captura guardada en: ", path)
+			current_target_photographed = true
+			GlobalPosition.update_object_photographed(true)
 		else:
 			print(" Error al guardar imagen: ", err)
 	else:
 		print("No puedes tomar la foto, no esta en foco!")
+		
+func _verify_photos_number() -> void:
+	var total_photos = Photos.load()
+	if total_photos.size() >= 2:
+		GlobalPosition.update_finish_game(true)
 
 func _physics_process(delta):
 	if not is_on_floor():

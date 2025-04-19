@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dqe37fah5kkke"]
+[gd_scene load_steps=17 format=3 uid="uid://dqe37fah5kkke"]
 
 [ext_resource type="Script" uid="uid://civw23vgxjey5" path="res://Script/main.gd" id="1_uacpp"]
 [ext_resource type="Script" uid="uid://b5vp61dtn20da" path="res://Script/ui.gd" id="3_bkggc"]
@@ -23,22 +23,6 @@ disable_receive_shadows = true
 [sub_resource type="LabelSettings" id="LabelSettings_vut0r"]
 font_size = 50
 font_color = Color(0.176471, 0.909804, 0.913725, 0.603922)
-
-[sub_resource type="FontFile" id="FontFile_bkggc"]
-cache/0/20/0/ascent = 0.0
-cache/0/20/0/descent = 0.0
-cache/0/20/0/underline_position = 0.0
-cache/0/20/0/underline_thickness = 0.0
-cache/0/20/0/scale = 1.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_myvrv"]
-font_size = 20
-font_color = Color(0.592157, 1, 0.576471, 1)
 
 [sub_resource type="FontFile" id="FontFile_hocx8"]
 cache/0/25/0/ascent = 0.0
@@ -68,6 +52,23 @@ cache/0/35/0/underline_thickness = 0.0
 cache/0/35/0/scale = 1.0
 
 [sub_resource type="Theme" id="Theme_hocx8"]
+
+[sub_resource type="FontFile" id="FontFile_bkggc"]
+cache/0/25/0/ascent = 0.0
+cache/0/25/0/descent = 0.0
+cache/0/25/0/underline_position = 0.0
+cache/0/25/0/underline_thickness = 0.0
+cache/0/25/0/scale = 1.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/45/0/ascent = 0.0
+cache/0/45/0/descent = 0.0
+cache/0/45/0/underline_position = 0.0
+cache/0/45/0/underline_thickness = 0.0
+cache/0/45/0/scale = 1.0
 
 [node name="Node" type="Node"]
 script = ExtResource("1_uacpp")
@@ -145,7 +146,7 @@ offset_bottom = 134.0
 text = "Depth Game!"
 label_settings = SubResource("LabelSettings_vut0r")
 
-[node name="Button" type="Button" parent="UI/Control/PanelContainer/Panel"]
+[node name="StartButton" type="Button" parent="UI/Control/PanelContainer/Panel"]
 layout_mode = 0
 offset_left = 494.0
 offset_top = 523.0
@@ -159,6 +160,15 @@ theme_override_styles/hover = ExtResource("4_imim1")
 theme_override_styles/normal = ExtResource("4_imim1")
 text = "Iniciar"
 
+[node name="ResetButton" type="Button" parent="UI/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 495.0
+offset_top = 597.0
+offset_right = 700.0
+offset_bottom = 661.0
+theme = ExtResource("3_hec2n")
+text = "Jugar de nuevo"
+
 [node name="OptionButton" type="OptionButton" parent="UI/Control/PanelContainer/Panel"]
 layout_mode = 0
 offset_left = 1068.0
@@ -171,7 +181,9 @@ theme_override_styles/hover = ExtResource("4_imim1")
 theme_override_styles/normal = ExtResource("4_imim1")
 
 [node name="WidgetsUI" type="CanvasLayer" parent="."]
+visible = false
 script = ExtResource("3_myvrv")
+show_mini_seconds = false
 
 [node name="Control" type="Control" parent="WidgetsUI"]
 layout_mode = 3
@@ -183,59 +195,44 @@ offset_bottom = 79.0
 layout_mode = 0
 offset_left = 16.0
 offset_top = 11.0
-offset_right = 311.0
-offset_bottom = 246.0
+offset_right = 376.0
+offset_bottom = 245.0
 theme = ExtResource("3_hec2n")
 
 [node name="Panel" type="Panel" parent="WidgetsUI/Control/PanelContainer"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("4_imim1")
 
-[node name="Label" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
+[node name="CounterPhotosLabel" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
 layout_mode = 0
-offset_left = 7.0
-offset_top = 12.0
-offset_right = 155.0
-offset_bottom = 35.0
-text = "Fotos tomadas: 0/5"
+offset_left = 15.0
+offset_top = 35.0
+offset_right = 178.0
+offset_bottom = 75.0
+text = "CounterPhotos"
 
-[node name="Label2" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
+[node name="CanShootLabel" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 45.0
-offset_right = 50.0
-offset_bottom = 68.0
-text = "Dof Near: "
+offset_left = 18.0
+offset_top = 89.0
+offset_right = 231.0
+offset_bottom = 123.0
+text = "CanShoot"
 
-[node name="Label3" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
+[node name="MainTimerLabel" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
 layout_mode = 0
-offset_left = 11.0
-offset_top = 85.0
-offset_right = 96.0
-offset_bottom = 119.0
-text = "Dof Far:"
-
-[node name="Label4" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
-layout_mode = 0
-offset_left = 10.0
-offset_top = 185.0
-offset_right = 140.0
-offset_bottom = 218.0
-theme = ExtResource("3_hec2n")
-theme_override_fonts/font = SubResource("FontFile_bkggc")
+offset_left = 15.0
+offset_top = 150.0
+offset_right = 198.0
+offset_bottom = 217.0
 theme_override_font_sizes/font_size = 25
-theme_override_styles/normal = ExtResource("4_imim1")
-label_settings = SubResource("LabelSettings_myvrv")
+text = "MainTarget"
 
-[node name="Label5" type="Label" parent="WidgetsUI/Control/PanelContainer/Panel"]
-layout_mode = 0
-offset_left = 10.0
-offset_top = 132.0
-offset_right = 90.0
-offset_bottom = 166.0
-text = "Target: "
+[node name="MainTimer" type="Timer" parent="WidgetsUI"]
+wait_time = 10.0
 
 [node name="DialogueUI" type="CanvasLayer" parent="."]
+visible = false
 script = ExtResource("5_vut0r")
 
 [node name="PanelContainer" type="PanelContainer" parent="DialogueUI"]
@@ -272,6 +269,7 @@ layout_mode = 2
 theme = ExtResource("3_hec2n")
 
 [node name="MenuUI" type="CanvasLayer" parent="."]
+visible = false
 script = ExtResource("7_hocx8")
 
 [node name="Control" type="Control" parent="MenuUI"]
@@ -334,3 +332,42 @@ offset_top = 185.0
 offset_right = 1207.0
 offset_bottom = 582.0
 theme = SubResource("Theme_hocx8")
+
+[node name="FinishGameUI" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Control" type="Control" parent="FinishGameUI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="FinishGameUI/Control"]
+layout_mode = 0
+offset_right = 1278.0
+offset_bottom = 795.0
+
+[node name="Panel" type="Panel" parent="FinishGameUI/Control/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FinishGameUI/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 474.0
+offset_top = 54.0
+offset_right = 707.0
+offset_bottom = 124.0
+theme = ExtResource("3_hec2n")
+theme_override_fonts/font = SubResource("FontFile_bkggc")
+theme_override_font_sizes/font_size = 45
+text = "END GAME"
+
+[node name="MainMenuBtn" type="Button" parent="FinishGameUI/Control/PanelContainer/Panel"]
+layout_mode = 0
+offset_left = 1061.0
+offset_top = 696.0
+offset_right = 1231.0
+offset_bottom = 755.0
+theme = ExtResource("3_hec2n")
+text = "Main menu"
+
+[connection signal="timeout" from="WidgetsUI/MainTimer" to="WidgetsUI" method="_main_timer_time_out"]

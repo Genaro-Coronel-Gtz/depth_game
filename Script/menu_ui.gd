@@ -5,7 +5,6 @@ extends CanvasLayer
 
 
 func _update_ui() -> void:
-	print("Update UI")
 	photosLbl.text = tr("photos")
 
 func _render_photos():

@@ -31,8 +31,9 @@ func _update_ui() -> void:
 
 func _render_ui() -> void:
 	var total_photos_taken = GlobalPosition.photos_number
+	var settings = Utils.load_settings()
 	
-	if total_photos_taken >= 2:
+	if total_photos_taken >= settings["total_photos"]:
 		ResetButton.visible = true
 		StartButton.visible = false
 	else:

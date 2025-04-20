@@ -40,6 +40,7 @@ func _process(delta: float) -> void:
 	
 func _reset_game():
 	print(" Reset game on main.gd ")
+	GlobalPosition.update_photos()
 	GlobalPosition.update_can_shoot(false)
 	GlobalPosition.update_photos_number(0)
 	GlobalPosition.update_object_photographed(false)
@@ -79,8 +80,8 @@ func _init_main_screen():
 	
 func _init_ui():
 	_init_main_screen()
-	StartButton.pressed.connect(_show_menu)
-	ResumeButton.pressed.connect(_start_game)
+	StartButton.pressed.connect(_start_game)
+	ResumeButton.pressed.connect(_resume_game)
 	MainMenuButton.pressed.connect(_init_main_screen)
 	
 func _start_intro():
@@ -101,6 +102,10 @@ func _start_intro():
 			_start_game()
 	)
 	
+func _resume_game():
+	get_tree().paused = false
+	_start_game()
+
 func _start_game():
 	UI.visible = false
 	World.visible = true
@@ -108,9 +113,10 @@ func _start_game():
 	MenuUI.visible = false
 	FinishGameUI.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
 	
 func _show_menu():
-	# pausar la interfaz tmbn
 	UI.visible = false
 	World.visible = false
 	Widgets.visible = false
@@ -120,4 +126,5 @@ func _show_menu():
 
 func _input(event):
 	if event.is_action_pressed("menu_ui"):
+		#get_tree().paused = true
 		_show_menu()

@@ -49,6 +49,7 @@ func _update_photos():
 	_render_photos()
 
 func _ready():
+	#pause_mode = Node.PROCESS_MODE_ALWAYS
 	if GlobalPosition:
 		GlobalPosition.connect("set_update_photos", Callable(self, "_update_photos"))
 		GlobalPosition.connect("set_lang", Callable(self, "_update_ui"))

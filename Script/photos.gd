@@ -2,7 +2,6 @@ extends Object
 class_name Photos
 
 const path_photos = "user://screen_shots/"
-const TOTAL_PHOTOS : int = 2
 
 static func delete_png_files():
 	var dir = DirAccess.open(path_photos)

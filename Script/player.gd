@@ -36,7 +36,13 @@ func _ready() -> void:
 	camera_pivot.position.y = posture_states[0]
 	if GlobalPosition:
 		GlobalPosition.connect("set_nearest_target", Callable(self, "_set_current_target"))
+		GlobalPosition.connect("set_is_photographed", Callable(self, "_set_is_photographed"))
+		
+		
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _set_is_photographed(photo: bool):
+	current_target_photographed = photo
 	
 func is_visible_to_player():
 	var space_state = get_world_3d().direct_space_state
@@ -185,7 +191,10 @@ func _shoot_cam():
 		
 func _verify_photos_number() -> void:
 	var total_photos = Photos.load()
-	if total_photos.size() >= 2:
+	var settings = Utils.load_settings()
+	print(" Verify photos number", settings["total_photos"])
+	GlobalPosition.update_photos()
+	if total_photos.size() >= settings["total_photos"]:
 		GlobalPosition.update_finish_game(true)
 
 func _physics_process(delta):
